@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>3.4</version>
-    <date>2017-10-26T15:08:20Z</date>
+    <date>2017-11-02T14:18:27Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -9,8 +9,8 @@
     </groups>
     <templates>
         <template>
-            <template>Template Microsoft DHCP Server</template>
-            <name>Template Microsoft DHCP Server</name>
+            <template>Template Microsoft DHCP Server 2012</template>
+            <name>Template Microsoft DHCP Server 2012</name>
             <description/>
             <groups>
                 <group>
@@ -22,7 +22,49 @@
                     <name>Microsoft DHCP</name>
                 </application>
             </applications>
-            <items/>
+            <items>
+                <item>
+                    <name>Etat Serveur DHCP</name>
+                    <type>0</type>
+                    <snmp_community/>
+                    <snmp_oid/>
+                    <key>service_state[DHCPServer]</key>
+                    <delay>1m</delay>
+                    <history>90d</history>
+                    <trends>365d</trends>
+                    <status>0</status>
+                    <value_type>3</value_type>
+                    <allowed_hosts/>
+                    <units/>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <params/>
+                    <ipmi_sensor/>
+                    <authtype>0</authtype>
+                    <username/>
+                    <password/>
+                    <publickey/>
+                    <privatekey/>
+                    <port/>
+                    <description/>
+                    <inventory_link>0</inventory_link>
+                    <applications>
+                        <application>
+                            <name>Microsoft DHCP</name>
+                        </application>
+                    </applications>
+                    <valuemap/>
+                    <logtimefmt/>
+                    <preprocessing/>
+                    <jmx_endpoint/>
+                    <master_item/>
+                </item>
+            </items>
             <discovery_rules>
                 <discovery_rule>
                     <name>Etendues DHCP</name>
@@ -227,7 +269,7 @@
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{Template Microsoft DHCP Server:dhcp[ScopeFree,{#SCOPEID}].last()}&lt;5</expression>
+                            <expression>{Template Microsoft DHCP Server 2012:dhcp[ScopeFree,{#SCOPEID}].last()}&lt;5</expression>
                             <recovery_mode>0</recovery_mode>
                             <recovery_expression/>
                             <name>Plus que 5 IP disponibles sur l'étendue {#SCOPEID}</name>
@@ -254,4 +296,22 @@
             <screens/>
         </template>
     </templates>
+    <triggers>
+        <trigger>
+            <expression>{Template Microsoft DHCP Server 2012:service_state[DHCPServer].last()}=6</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
+            <name>Service DHCP Server Arrêté</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>4</priority>
+            <description/>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
+        </trigger>
+    </triggers>
 </zabbix_export>
