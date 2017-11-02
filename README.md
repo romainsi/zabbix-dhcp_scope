@@ -6,7 +6,16 @@ This template use PowerShell Cmdlets to discover Microsoft DHCP Server Scope.
 
 Default French translation.
 
-Items : IPs availables in dhcp scope, Number of IPs reserved, Number of IPs used, Percentage of IPs used 
+Items : IPs availables in dhcp scope, Number of IPs reserved, Number of IPs used, Percentage of IPs used and state DhcpServer service.
+
+ -------- Item --------
+ 
+State DHCPSERVER
+
+-------- Triggers --------
+
+[HIGH] => Service DHCPServer Stop
+
 
 Discovery : All Scope in DHCP Server
 
