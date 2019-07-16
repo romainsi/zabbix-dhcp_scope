@@ -1,6 +1,6 @@
 ================Zabbix-Microsoft-DHCP-Server ================
 
-Work on Windows Server 2012,2012 R2
+Work on Windows Server 2012,2012 R2,2016,2019
 
 This template use PowerShell Cmdlets to discover Microsoft DHCP Server Scope.
 
