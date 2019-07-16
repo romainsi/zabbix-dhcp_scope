@@ -19,7 +19,7 @@ switch ($ITEM) {
   "Discovery" {
     # Open JSON object
     $output =  "{`"data`":["
-      $query = Get-DhcpServerv4ScopeStatistics | Select-Object ScopeId
+      $query = Get-DhcpServerv4ScopeStatistics | Where {$_.Free -gt 0} | Select-Object ScopeId
       $count = $query | Measure-Object
       $count = $count.count
       foreach ($object in $query) {
