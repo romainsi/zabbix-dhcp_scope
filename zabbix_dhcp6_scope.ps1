@@ -25,9 +25,9 @@ switch ($ITEM) {
       foreach ($object in $query) {
         $Id = [string]$object.Prefix
         if ($count -eq 1) {
-          $output = $output + "{`"{#Prefix}`":`"$Id`"}"
+          $output = $output + "{`"{#PREFIX}`":`"$Id`"}"
         } else {
-          $output = $output + "{`"{#Prefix}`":`"$Id`"},"
+          $output = $output + "{`"{#PREFIX}`":`"$Id`"},"
         }
         $count--
     }
