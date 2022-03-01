@@ -37,28 +37,28 @@ switch ($ITEM) {
   }
    
    "ScopeFree" {
-  $query = Get-DhcpServerv6ScopeStatistics | Where-Object {$_.Prefix -like "*$ID*"} | Select-Object Free
+  $query = Get-DhcpServerv6ScopeStatistics -ScopeId "$ID" | Select-Object Free
   foreach ($object in $query) {
   $Free = [string]$object.Free}
   $Free
     }
 
    "ScopeInUse" {
-  $query = Get-DhcpServerv6ScopeStatistics | Where-Object {$_.Prefix -like "*$ID*"} | Select-Object InUse
+  $query = Get-DhcpServerv6ScopeStatistics -ScopeId "$ID" | Select-Object InUse
   foreach ($object in $query) {
   $InUse = [string]$object.InUse}
   $InUse
     }
     
    "ScopePercentageInUse" {
-  $query = Get-DhcpServerv6ScopeStatistics | Where-Object {$_.Prefix -like "*$ID*"} | Select-Object PercentageInUse
+  $query = Get-DhcpServerv6ScopeStatistics -ScopeId "$ID" | Select-Object PercentageInUse
   foreach ($object in $query) {
   $PercentageInUse = [string]$object.PercentageInUse}
   $PercentageInUse
     } 
 
    "ScopeReserved" {
-  $query = Get-DhcpServerv6ScopeStatistics | Where-Object {$_.Prefix -like "*$ID*"} | Select-Object Reserved
+  $query = Get-DhcpServerv6ScopeStatistics -ScopeId "$ID" | Select-Object Reserved
   foreach ($object in $query) {
   $Reserved = [string]$object.Reserved}
   $Reserved
