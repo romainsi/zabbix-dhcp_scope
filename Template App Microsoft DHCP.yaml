@@ -1,0 +1,245 @@
+zabbix_export:
+  version: '5.4'
+  date: '2022-03-01T09:31:01Z'
+  groups:
+    -
+      uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
+      name: Templates/Applications
+  templates:
+    -
+      uuid: c7b272268aaa49edbbe8811ed0d19024
+      template: 'Template App Microsoft DHCP'
+      name: 'Template App Microsoft DHCP'
+      groups:
+        -
+          name: Templates/Applications
+      items:
+        -
+          uuid: 159e7fae06cd43f69f989957c783f7e7
+          name: 'DHCP Results'
+          type: TRAP
+          key: ResultsDhcpScope
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: TRIM
+              parameters:
+                - '"'
+          tags:
+            -
+              tag: Application
+              value: 'Master Item DHCP'
+        -
+          uuid: f7e0d18c48b84c569a560a0fcecdbb18
+          name: 'Etat Serveur DHCP'
+          key: 'service.info[DHCPServer,state]'
+          history: 20d
+          valuemap:
+            name: 'Windows service state'
+          request_method: POST
+          tags:
+            -
+              tag: Application
+              value: Broker
+          triggers:
+            -
+              uuid: d9cd5f17c2ce4bd2aec6b6c2761141d8
+              expression: 'last(/Template App Microsoft DHCP/service.info[DHCPServer,state])=6'
+              name: 'Service DHCP Server Arrêté'
+              priority: HIGH
+        -
+          uuid: 3c5de9dc9880409eaba88b050f9d6171
+          name: 'Start DHCP Job'
+          key: 'system.run[powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Program Files\Zabbix Agent 2\scripts\zabbix_dhcp_scope.ps1",nowait]'
+          delay: 2m
+          tags:
+            -
+              tag: Application
+              value: 'Master Item DHCP'
+      discovery_rules:
+        -
+          uuid: 888b827a3eb54e53987fce0ae3580feb
+          name: 'Results DHCP'
+          type: DEPENDENT
+          key: Discovery.DHCP.Results
+          delay: '0'
+          lifetime: 2h
+          item_prototypes:
+            -
+              uuid: 96af93a1ff7c4bf993b83933585440a4
+              name: 'IP disponibles étendue {#SCOPEID}'
+              type: DEPENDENT
+              key: 'dhcp[ScopeFree,{#SCOPEID}]'
+              delay: '0'
+              preprocessing:
+                -
+                  type: JSONPATH
+                  parameters:
+                    - '$.[?(@.ScopeId == "{#SCOPEID}")].Free'
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - '['
+                    - ''
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - ']'
+                    - ''
+              master_item:
+                key: ResultsDhcpScope
+              tags:
+                -
+                  tag: Application
+                  value: 'Config DHCP'
+              trigger_prototypes:
+                -
+                  uuid: 0b2bcd6d0c4149bdb6699ed63d2e7451
+                  expression: 'last(/Template App Microsoft DHCP/dhcp[ScopeFree,{#SCOPEID}])<5'
+                  name: 'Plus que 5 IP disponibles sur l''étendue {#SCOPEID}'
+                  priority: AVERAGE
+            -
+              uuid: 36b3ecf6f5a9453cb1a6a1793bec5e47
+              name: 'Nombre d''IP utilisé sur l''étendue {#SCOPEID}'
+              type: DEPENDENT
+              key: 'dhcp[ScopeinUse,{#SCOPEID}]'
+              delay: '0'
+              preprocessing:
+                -
+                  type: JSONPATH
+                  parameters:
+                    - '$.[?(@.ScopeId == "{#SCOPEID}")].InUse'
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - '['
+                    - ''
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - ']'
+                    - ''
+              master_item:
+                key: ResultsDhcpScope
+              tags:
+                -
+                  tag: Application
+                  value: 'Config DHCP'
+            -
+              uuid: 9b114feb2fe648129ff7300e3e29d65e
+              name: 'Pourcentage d''IP utilisé sur l''étendue {#SCOPEID}'
+              type: DEPENDENT
+              key: 'dhcp[ScopePercentageInUse,{#SCOPEID}]'
+              delay: '0'
+              value_type: FLOAT
+              units: '%'
+              preprocessing:
+                -
+                  type: JSONPATH
+                  parameters:
+                    - '$.[?(@.ScopeId == "{#SCOPEID}")].PercentageInUse'
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - '['
+                    - ''
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - ']'
+                    - ''
+              master_item:
+                key: ResultsDhcpScope
+              tags:
+                -
+                  tag: Application
+                  value: 'Config DHCP'
+            -
+              uuid: 1f3de1833cbe4c6f8fbd0fbf78a7fef9
+              name: 'Nombre d''IP réservé sur l''étendue {#SCOPEID}'
+              type: DEPENDENT
+              key: 'dhcp[ScopeReserved,{#SCOPEID}]'
+              delay: '0'
+              preprocessing:
+                -
+                  type: JSONPATH
+                  parameters:
+                    - '$.[?(@.ScopeId == "{#SCOPEID}")].Reserved'
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - '['
+                    - ''
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - ']'
+                    - ''
+              master_item:
+                key: ResultsDhcpScope
+              tags:
+                -
+                  tag: Application
+                  value: 'Config DHCP'
+          master_item:
+            key: ResultsDhcpScope
+          preprocessing:
+            -
+              type: STR_REPLACE
+              parameters:
+                - ScopeId
+                - '{#SCOPEID}'
+            -
+              type: STR_REPLACE
+              parameters:
+                - Free
+                - '{#FREE}'
+            -
+              type: STR_REPLACE
+              parameters:
+                - InUse
+                - '{#INUSE}'
+            -
+              type: STR_REPLACE
+              parameters:
+                - PercentageInUse
+                - '{#PERCENTAGEINUSE}'
+            -
+              type: STR_REPLACE
+              parameters:
+                - Reserved
+                - '{#RESERVED}'
+      valuemaps:
+        -
+          uuid: c8ee8f0901c64dadbe6a4d6277d1612f
+          name: 'Windows service state'
+          mappings:
+            -
+              value: '0'
+              newvalue: Running
+            -
+              value: '1'
+              newvalue: Paused
+            -
+              value: '3'
+              newvalue: 'Pause pending'
+            -
+              value: '4'
+              newvalue: 'Continue pending'
+            -
+              value: '5'
+              newvalue: 'Stop pending'
+            -
+              value: '6'
+              newvalue: Stopped
+            -
+              value: '7'
+              newvalue: Unknown
+            -
+              value: '255'
+              newvalue: 'No such service'
+            -
+              value: '2'
+              newvalue: 'Start pending'
