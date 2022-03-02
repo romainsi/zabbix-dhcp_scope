@@ -30,5 +30,5 @@ Install the Zabbix agent2 on your host,
 Copy zabbix_dhcp_scope.ps1 in your zabbix agent2 directory,
 
 Add the following line to your Zabbix agent configuration file :
-
-UnsafeUserParameters=1
+`UnsafeUserParameters=1`
+`AllowKey=system.run[*]` (or create userparameter and change zabbix item "Start DHCP Job").
